@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { Sequelize } = require('sequelize');
+const db = require('./models');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -25,15 +27,21 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
- 
 
+
+ 
+  console.log('Host:', process.env.PG_HOST);
+  console.log('Port:', process.env.PG_PORT);
+  console.log('User:', process.env.PG_USER);
+  console.log('Password:', process.env.PG_PASSWORD);
+  console.log('Database:', process.env.PG_DATABASE);
 const sequelize = new Sequelize({
     dialect: 'postgres',
-  host: process.env.PG_HOST || 'localhost', // Default host to 'localhost'
-  port: process.env.PG_PORT || 5432, // Default port to 5432
-  username: process.env.PG_USER || 'postgres',
-  password: process.env.PG_PASSWORD || 'postgres',
-  database: process.env.PG_DATABASE || 'TaskManager',
+    host: process.env.PG_HOST,
+    port: process.env.PG_PORT,
+    username: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE,
   });
   
 
@@ -43,9 +51,9 @@ sequelize
 .then(() => console.log('Connected to PostgreSQL successfully'))
 .catch((err) => console.error('Unable to connect to PostgreSQL:', err));
 
-sequelize
-  .sync() // Creates tables based on defined models
-  .then(() => console.log('Database synchronized'))
+db.sequelize
+  .sync()
+  .then(() => console.log('Database synchronized with force'))
   .catch((err) => console.error('Error synchronizing database:', err));
 
 
