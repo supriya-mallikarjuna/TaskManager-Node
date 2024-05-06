@@ -2,11 +2,6 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const User = sequelize.define('User', {
-    id: {
-      type: DataTypes.INTEGER, // Corrected typo
-      autoIncrement: true,
-      primaryKey: true,
-    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,7 +12,12 @@ module.exports = (sequelize) => {
       unique: true,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING,  // Optional field
+      allowNull: true,  // Password can be null for social login
+    },
+    loginType: {
+      type: DataTypes.ENUM('social', 'manual'),  // Defines login type
+      allowNull: false,
     },
   });
 

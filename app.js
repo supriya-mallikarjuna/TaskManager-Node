@@ -5,9 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { Sequelize } = require('sequelize');
 const db = require('./models');
+const cors = require('cors'); 
 
-var indexRouter = require('./routes/index');
+
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -22,19 +24,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(
+    cors({
+      origin: 'http://localhost:4200',  // Allow a specific origin
+      methods: ['GET', 'POST'],  // Allow specific HTTP methods
+      allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
+    })
+  );
+
 
 app.use('/static', express.static(path.join(__dirname, 'public')))
-
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
 
 
- 
-  console.log('Host:', process.env.PG_HOST);
-  console.log('Port:', process.env.PG_PORT);
-  console.log('User:', process.env.PG_USER);
-  console.log('Password:', process.env.PG_PASSWORD);
-  console.log('Database:', process.env.PG_DATABASE);
+
 const sequelize = new Sequelize({
     dialect: 'postgres',
     host: process.env.PG_HOST,

@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const userController = require('../controllers/userController'); 
 
-/* Create users  */
-router.post('/users', userController.createUser); // Corrected function name
+// In routes/userRoutes.js
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController'); // Import the controller
 
-module.exports = router;
+// Define routes
+router.post('/create', userController.createUser);
 
+module.exports = router; // Correct router export
