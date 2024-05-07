@@ -8,8 +8,11 @@ const db = require('./models');
 const cors = require('cors'); 
 
 
-var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+const listRoutes = require('./routes/list'); // The route fi
+const taskRoutes = require('./routes/task'); // The route fi
+
 
 var app = express();
 
@@ -33,6 +36,8 @@ app.use(
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/list', listRoutes);
+app.use('/task', taskRoutes);
 
 
 

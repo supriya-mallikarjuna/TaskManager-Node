@@ -2,20 +2,19 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const List = sequelize.define('List', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true, // Ensure each list has a unique name
     },
-  }, {
-    tableName: 'Lists', // Explicit table name
-    timestamps: true,   // Adds createdAt and updatedAt
   });
+
+  List.associate = (models) => {
+    List.hasMany(models.Task, {
+      foreignKey: 'listId',  // Foreign key in Task pointing to List
+      as: 'tasks',  // Alias for the relationship
+      onDelete: 'CASCADE',  // Deletes related tasks if the list is deleted
+    });
+  };
 
   return List;
 };
