@@ -16,9 +16,6 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,28 +36,19 @@ app.use('/auth', authRouter);
 
 
 
-const sequelize = new Sequelize({
-    dialect: 'postgres',
-    host: process.env.PG_HOST,
-    port: process.env.PG_PORT,
-    username: process.env.PG_USER,
-    password: process.env.PG_PASSWORD,
-    database: process.env.PG_DATABASE,
-  });
-  
 
   // Test the connection to PostgreSQL
-sequelize
-.authenticate()
-.then(() => console.log('Connected to PostgreSQL successfully'))
-.catch((err) => console.error('Unable to connect to PostgreSQL:', err));
 
-db.sequelize
-  .sync()
-  .then(() => console.log('Database synchronized with force'))
-  .catch((err) => console.error('Error synchronizing database:', err));
-
-
+  (async () => {
+    try {
+      await db.sequelize.authenticate(); // Verify the database connection
+      await db.sequelize.sync({ force: true }); // Sync all models (use with caution)
+      console.log('Database synchronized successfully');
+    } catch (error) {
+      console.error('Error synchronizing database:', error);
+    }
+  })();
+  
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

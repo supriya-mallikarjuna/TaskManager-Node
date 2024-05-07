@@ -14,10 +14,18 @@ exports.createUser = (req, res) => {
     return res.status(400).json({ error: 'Invalid login type' });
   }
 
-  // Create a new user in the database
-  User.create({ username, email, password, loginType })  // Password can be null for social login
-    .then((user) => {
-      res.status(201).json(user);  // Return HTTP 201 - Created
+  // Check if a user with the same email already exists
+  User.findOne({ where: { email } })  // Check for existing email
+    .then((existingUser) => {
+      if (existingUser) {
+        return res.status(409).json({ error: 'Email is already registered. Please log in.' });  // Email conflict
+      }
+
+      // Create a new user in the database
+      return User.create({ username, email, password, loginType })  // Password can be null for social login
+        .then((user) => {
+          res.status(201).json(user);  // HTTP 201 - Created
+        });
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });  // Handle database errors

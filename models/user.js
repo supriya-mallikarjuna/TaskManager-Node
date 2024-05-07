@@ -19,6 +19,9 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM('social', 'manual'),  // Defines login type
       allowNull: false,
     },
+  }, {
+    tableName: 'Users', // Ensure explicit table name
+    timestamps: true,
   });
 
   return User;

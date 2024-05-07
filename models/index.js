@@ -1,20 +1,26 @@
 const fs = require('fs');
 const path = require('path');
-const { Sequelize } = require('sequelize');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
+const sequelize = require('../config/sequelize'); // Sequelize instance
 const db = {};
 
-const sequelize = new Sequelize(config.database, config.username, 
-    config.password, config);
+// Explicitly import and initialize models
+const UserModel = require('./user'); 
+const ListModel = require('./list');
+const TaskModel = require('./task');
+// Import the model
 
-fs.readdirSync(__dirname)
-  .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(sequelize);
-    db[model.name] = model;
-  });
+const User = UserModel(sequelize);
+const List = ListModel(sequelize); // Correct initialization
+const Task = TaskModel(sequelize);
+
+Task.belongsTo(List, { foreignKey: 'listId', onDelete: 'CASCADE' });
+List.hasMany(Task, { foreignKey: 'listId' }); // Reverse association
+// Add models to the db object
+db.User = User;
+db.List = List;
+db.Task = Task;
 
 db.sequelize = sequelize;
+
 module.exports = db;
+

@@ -1,11 +1,16 @@
 {
-    "development": {
-      "username": "postgres",
-      "password": "postgres",
-      "database": "TaskManager",
-      "host": "localhost",
-      "dialect": "postgres"
-    },
+    
+        "development": {
+          "username": "postgres",
+          "password": "postgres",
+          "database": "TaskManager",
+          "host": "localhost",
+          "dialect": "postgres",
+          "migrationStorageTableName": "sequelize_meta",
+          "migrationStoragePath": "migrations"
+        },
+      
+      
 
     "test": {
         "username": "postgres",
